@@ -44,6 +44,7 @@ interface EngineerProfile {
   desiredSalaryMin: number | null
   desiredSalaryMax: number | null
   availableFrom: string | null
+  isITEngineer: boolean
   githubUrl: string | null
   linkedinUrl: string | null
   portfolioUrl: string | null
@@ -77,6 +78,7 @@ export default function EngineerProfilePage() {
     desiredSalaryMin: null,
     desiredSalaryMax: null,
     availableFrom: null,
+    isITEngineer: true,
     githubUrl: null,
     linkedinUrl: null,
     portfolioUrl: null,
@@ -101,7 +103,7 @@ export default function EngineerProfilePage() {
         setFormData({
           ...data,
           birthDate: data.birthDate ? data.birthDate.split('T')[0] : null,
-          availableFrom: data.availableFrom ? data.availableFrom.split('T')[0] : null,
+          isITEngineer: data.isITEngineer ?? true,
           experiences: data.experiences || [],
           skills: data.skills || [],
         })
@@ -520,22 +522,52 @@ export default function EngineerProfilePage() {
                   <label htmlFor="availableFrom" className="block text-sm font-medium text-gray-700 mb-2">
                     転職希望時期
                   </label>
-                  <input
+                  <select
                     id="availableFrom"
                     name="availableFrom"
-                    type="date"
                     value={formData.availableFrom || ''}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
-                  />
+                  >
+                    <option value="">選択してください</option>
+                    <option value="すぐにでも">すぐにでも</option>
+                    <option value="一か月以内">一か月以内</option>
+                    <option value="三か月以内">三か月以内</option>
+                    <option value="半年以内">半年以内</option>
+                    <option value="一年以内">一年以内</option>
+                  </select>
                   <p className="mt-2 text-sm text-gray-500">いつ頃から新しい職場で働けるかをお知らせください</p>
+                </div>
+
+                <div className="flex items-center gap-2 pt-4">
+                  <input
+                    type="checkbox"
+                    id="isITEngineer"
+                    name="isITEngineer"
+                    checked={formData.isITEngineer}
+                    onChange={(e) => setFormData(prev => ({ ...prev, isITEngineer: e.target.checked }))}
+                    className="w-5 h-5 text-primary-500 rounded focus:ring-2 focus:ring-primary-500"
+                  />
+                  <label htmlFor="isITEngineer" className="text-sm font-medium text-gray-700">
+                    IT技術者
+                  </label>
+                  <p className="text-sm text-gray-500 ml-2">IT技術者の場合、スキル管理とSNS・ポートフォリオの項目が表示されます</p>
                 </div>
               </div>
             </div>
 
             {/* 職歴 */}
             <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">職歴</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold text-gray-900">職歴</h2>
+                <button
+                  type="button"
+                  onClick={() => router.push('/dashboard/engineer/experiences')}
+                  className="text-primary-500 hover:text-primary-600 text-sm font-medium"
+                >
+                  詳細管理ページへ →
+                </button>
+              </div>
               <div className="space-y-4">
                 {formData.experiences && formData.experiences.length > 0 ? (
                   formData.experiences.map((exp) => (
@@ -561,18 +593,12 @@ export default function EngineerProfilePage() {
                     職歴が登録されていません
                   </p>
                 )}
-                <button
-                  type="button"
-                  onClick={() => router.push('/dashboard/engineer/experiences')}
-                  className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-primary-500 hover:text-primary-500 transition"
-                >
-                  + 職歴を管理
-                </button>
               </div>
             </div>
 
-            {/* SNS・ポートフォリオ */}
-            <div className="bg-white rounded-lg shadow p-6">
+            {/* SNS・ポートフォリオ (IT技術者のみ) */}
+            {formData.isITEngineer && (
+              <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-4">SNS・ポートフォリオ</h2>
               <div className="space-y-4">
                 <div>
@@ -621,9 +647,11 @@ export default function EngineerProfilePage() {
                 </div>
               </div>
             </div>
+            )}
 
-            {/* スキル管理 */}
-            <div className="bg-white rounded-lg shadow p-6">
+            {/* スキル管理 (IT技術者のみ) */}
+            {formData.isITEngineer && (
+              <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-gray-900">スキル管理</h2>
                 <button
@@ -725,6 +753,7 @@ export default function EngineerProfilePage() {
                 <p className="text-gray-500 text-center py-4">スキルデータを読み込み中...</p>
               )}
             </div>
+            )}
 
             <div className="flex gap-4">
               <button

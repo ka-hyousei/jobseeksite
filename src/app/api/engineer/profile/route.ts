@@ -70,7 +70,8 @@ const updateProfileSchema = z.object({
   desiredPosition: z.string().nullable().optional(),
   desiredSalaryMin: z.number().int().min(0).nullable().optional(),
   desiredSalaryMax: z.number().int().min(0).nullable().optional(),
-  availableFrom: z.string().nullable().optional(), // 転職希望時期
+  availableFrom: z.string().nullable().optional(), // 転職希望時期: "すぐにでも", "一か月以内", etc.
+  isITEngineer: z.boolean().optional(),
   githubUrl: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
   linkedinUrl: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
   portfolioUrl: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
@@ -107,7 +108,7 @@ export async function PUT(req: Request) {
       linkedinUrl: validatedData.linkedinUrl === '' ? null : validatedData.linkedinUrl,
       portfolioUrl: validatedData.portfolioUrl === '' ? null : validatedData.portfolioUrl,
       birthDate: validatedData.birthDate ? new Date(validatedData.birthDate) : null,
-      availableFrom: validatedData.availableFrom ? new Date(validatedData.availableFrom) : null,
+      // availableFrom is now a string, not a DateTime
     }
 
     // Update engineer profile

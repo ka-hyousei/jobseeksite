@@ -118,7 +118,8 @@ model Engineer {
   desiredPosition   String?
   desiredSalaryMin  Int?
   desiredSalaryMax  Int?
-  availableFrom     DateTime?
+  availableFrom     String?       // 転職希望時期: "すぐにでも", "一か月以内", "三か月以内", "半年以内", "一年以内"
+  isITEngineer      Boolean       @default(true) // IT技術者かどうか
 
   // SNS・ポートフォリオ
   githubUrl       String?
