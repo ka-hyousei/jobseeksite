@@ -297,6 +297,10 @@ export default function EngineerProfilePage() {
       })
 
       if (response.ok) {
+        const savedExp = await response.json()
+        console.log('Experience saved:', savedExp)
+
+        // プロフィールを再取得して最新の職歴を表示
         await fetchProfile()
         resetExpForm()
         setSuccess(true)

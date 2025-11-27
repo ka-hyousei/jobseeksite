@@ -5,12 +5,25 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import Dialog from '@/components/Dialog'
 
 export default function NewJobPage() {
   const router = useRouter()
   const { data: session, status } = useSession()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const [dialog, setDialog] = useState<{
+    isOpen: boolean
+    type: 'success' | 'error' | 'info'
+    title: string
+    message: string
+  }>({
+    isOpen: false,
+    type: 'info',
+    title: '',
+    message: ''
+  })
 
   const [formData, setFormData] = useState({
     title: '',
@@ -63,21 +76,50 @@ export default function NewJobPage() {
       console.log('Response data:', data)
 
       if (response.ok) {
-        alert('求人を作成しました')
-        router.push('/dashboard/company')
+        setDialog({
+          isOpen: true,
+          type: 'success',
+          title: '求人作成成功',
+          message: '求人が正常に作成されました。'
+        })
+        setTimeout(() => {
+          router.push('/dashboard/company')
+        }, 2000)
       } else {
         if (data.requiresPayment) {
           // Redirect to subscription page with error message
-          if (confirm(data.error + '\n\n有料プラン登録ページに移動しますか？')) {
+          let errorMessage = data.error || '求人を投稿するには有料プランへの登録が必要です。'
+          errorMessage = errorMessage.replace(/http:\/\/localhost:\d+/g, '').trim()
+
+          setDialog({
+            isOpen: true,
+            type: 'error',
+            title: '有料プランが必要です',
+            message: errorMessage + '\n\n有料プラン登録ページに移動しますか？'
+          })
+
+          setTimeout(() => {
             router.push('/dashboard/company/subscription')
-          }
+          }, 3000)
         } else {
-          setError(data.error || '求人の作成に失敗しました')
+          let errorMessage = data.error || '求人の作成に失敗しました'
+          errorMessage = errorMessage.replace(/http:\/\/localhost:\d+/g, '').trim()
+          setDialog({
+            isOpen: true,
+            type: 'error',
+            title: '求人作成失敗',
+            message: errorMessage
+          })
         }
       }
     } catch (err) {
       console.error('Job creation error:', err)
-      setError('求人の作成中にエラーが発生しました')
+      setDialog({
+        isOpen: true,
+        type: 'error',
+        title: 'エラー',
+        message: '求人の作成中にエラーが発生しました'
+      })
     } finally {
       setLoading(false)
     }
@@ -300,6 +342,14 @@ export default function NewJobPage() {
         </div>
       </div>
       <Footer />
+
+      <Dialog
+        isOpen={dialog.isOpen}
+        onClose={() => setDialog({ ...dialog, isOpen: false })}
+        title={dialog.title}
+        message={dialog.message}
+        type={dialog.type}
+      />
     </>
   )
 }

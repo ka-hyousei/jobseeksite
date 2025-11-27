@@ -5,11 +5,23 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import Dialog from '@/components/Dialog'
 
 export default function EngineerRegisterPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [dialog, setDialog] = useState<{
+    isOpen: boolean
+    type: 'success' | 'error' | 'info'
+    title: string
+    message: string
+  }>({
+    isOpen: false,
+    type: 'info',
+    title: '',
+    message: '',
+  })
 
   const [formData, setFormData] = useState({
     email: '',
@@ -95,14 +107,39 @@ export default function EngineerRegisterPage() {
       const data = await response.json()
 
       if (response.ok) {
-        // メール検証画面に遷移
-        router.push(`/verify-email?userId=${data.userId}&email=${encodeURIComponent(formData.email)}&type=${data.verificationType}`)
+        // 成功ダイアログを表示
+        setDialog({
+          isOpen: true,
+          type: 'success',
+          title: '登録成功',
+          message: 'アカウントが正常に作成されました。\n\n登録したメールアドレスに確認コードを送信しました。\nメールをご確認ください。',
+        })
+        // 2秒後にメール検証画面に遷移
+        setTimeout(() => {
+          router.push(`/verify-email?userId=${data.userId}&email=${encodeURIComponent(formData.email)}`)
+        }, 2000)
       } else {
-        setError(data.error || '登録に失敗しました')
+        // エラーメッセージをクリーンアップ（localhostのURLを削除）
+        let errorMessage = data.error || '登録に失敗しました'
+        if (typeof errorMessage === 'string') {
+          errorMessage = errorMessage.replace(/http:\/\/localhost:\d+/g, '').trim()
+        }
+
+        setDialog({
+          isOpen: true,
+          type: 'error',
+          title: '登録失敗',
+          message: errorMessage,
+        })
       }
     } catch (err) {
       console.error('Registration error:', err)
-      setError('登録中にエラーが発生しました')
+      setDialog({
+        isOpen: true,
+        type: 'error',
+        title: 'エラー',
+        message: '登録中にエラーが発生しました。\nもう一度お試しください。',
+      })
     } finally {
       setLoading(false)
     }
@@ -111,13 +148,19 @@ export default function EngineerRegisterPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gray-50 py-12 px-4">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">技術者登録</h1>
-              <p className="text-gray-600">あなたのスキルを活かせる仕事を見つけましょう</p>
-            </div>
+      <Dialog
+        isOpen={dialog.isOpen}
+        onClose={() => setDialog({ ...dialog, isOpen: false })}
+        title={dialog.title}
+        message={dialog.message}
+        type={dialog.type}
+      />
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">技術者登録</h1>
+            <p className="text-gray-600">あなたのスキルを活かせる仕事を見つけましょう</p>
+          </div>
 
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
@@ -127,7 +170,7 @@ export default function EngineerRegisterPage() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* アカウント情報 */}
-              <div className="border-b pb-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-xl font-bold text-gray-900 mb-4">アカウント情報</h2>
 
                 <div className="space-y-4">
@@ -184,7 +227,7 @@ export default function EngineerRegisterPage() {
               </div>
 
               {/* 基本情報 */}
-              <div className="border-b pb-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-xl font-bold text-gray-900 mb-4">基本情報</h2>
 
                 <div className="space-y-4">
@@ -343,7 +386,7 @@ export default function EngineerRegisterPage() {
               </div>
 
               {/* 職務情報 */}
-              <div className="border-b pb-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-xl font-bold text-gray-900 mb-4">職務情報</h2>
 
                 <div className="space-y-4">
@@ -440,7 +483,7 @@ export default function EngineerRegisterPage() {
 
               {/* SNS・ポートフォリオ (IT技術者のみ) */}
               {formData.isITEngineer && (
-                <div className="pb-6">
+                <div className="bg-white rounded-lg shadow p-6">
                   <h2 className="text-xl font-bold text-gray-900 mb-4">SNS・ポートフォリオ</h2>
 
                   <div className="space-y-4">
@@ -501,14 +544,13 @@ export default function EngineerRegisterPage() {
               </button>
             </form>
 
-            <div className="mt-6 text-center">
-              <p className="text-gray-600">
-                既にアカウントをお持ちですか?{' '}
-                <Link href="/login" className="text-primary-500 hover:underline font-semibold">
-                  ログイン
-                </Link>
-              </p>
-            </div>
+          <div className="mt-6 text-center">
+            <p className="text-gray-600">
+              既にアカウントをお持ちですか?{' '}
+              <Link href="/login" className="text-primary-500 hover:underline font-semibold">
+                ログイン
+              </Link>
+            </p>
           </div>
         </div>
       </div>
