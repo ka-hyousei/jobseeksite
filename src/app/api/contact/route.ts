@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
 import { sendEmail } from '@/lib/email'
 
+export const dynamic = 'force-dynamic'
+
 const contactSchema = z.object({
   name: z.string().min(1, 'お名前は必須です'),
   email: z.string().email('有効なメールアドレスを入力してください'),

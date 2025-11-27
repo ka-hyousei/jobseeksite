@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { sendEmail, createVerificationEmail } from '@/lib/email'
 
+export const dynamic = 'force-dynamic'
+
 // 6桁の検証コードを生成
 function generateVerificationCode(): string {
   return Math.floor(100000 + Math.random() * 900000).toString()

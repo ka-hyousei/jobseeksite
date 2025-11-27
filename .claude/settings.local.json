@@ -7,7 +7,12 @@
       "Bash(git gc:*)",
       "Bash(git push:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(for file in \"src/app/api/scout/auto-match/route.ts\" \"src/app/api/payments/confirm/route.ts\" \"src/app/api/subscription/cancel/route.ts\" \"src/app/api/project-applications/route.ts\" \"src/app/api/contact/route.ts\")",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(head:*)",
+      "Bash(done)",
+      "Bash(for file in \"src/app/api/auth/send-verification/route.ts\" \"src/app/api/auth/verify-email/route.ts\" \"src/app/api/register/engineer/route.ts\" \"src/app/api/register/company/route.ts\")"
     ],
     "deny": [],
     "ask": []

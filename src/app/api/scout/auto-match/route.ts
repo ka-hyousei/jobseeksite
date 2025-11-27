@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
 import { sendEmail, createScoutEmail } from '@/lib/email'
 
+export const dynamic = 'force-dynamic'
+
 // マッチングスコアを計算する関数
 function calculateMatchScore(job: any, engineer: any): number {
   let score = 0
