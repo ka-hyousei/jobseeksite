@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cmd /c \"if not exist .vscode mkdir .vscode\")"
+      "Bash(cmd /c \"if not exist .vscode mkdir .vscode\")",
+      "Bash(rm:*)",
+      "Bash(git reflog:*)",
+      "Bash(git gc:*)",
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
