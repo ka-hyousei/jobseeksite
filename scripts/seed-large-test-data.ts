@@ -132,7 +132,7 @@ async function main() {
             subscriptionExpiry,
             trialStartDate,
             trialEndDate,
-            isTrialActive: hasTrial && trialEndDate && trialEndDate > new Date(),
+            isTrialActive: !!(hasTrial && trialEndDate && trialEndDate > new Date()),
             hasUsedTrial: hasTrial,
             hasScoutAccess: hasSubscription || (hasTrial && Math.random() > 0.5),
             scoutAccessExpiry: hasSubscription ? subscriptionExpiry : null,
