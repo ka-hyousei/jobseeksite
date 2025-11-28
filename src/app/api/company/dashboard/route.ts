@@ -48,7 +48,10 @@ export async function GET() {
     const [jobs, projectPosts, applications] = await Promise.all([
       // Get jobs with application counts
       prisma.job.findMany({
-        where: { companyId },
+        where: {
+          companyId,
+          isActive: true,
+        },
         select: {
           id: true,
           title: true,
@@ -69,7 +72,10 @@ export async function GET() {
 
       // Get project posts
       prisma.projectPost.findMany({
-        where: { companyId },
+        where: {
+          companyId,
+          isActive: true,
+        },
         select: {
           id: true,
           title: true,
@@ -134,9 +140,9 @@ export async function GET() {
       },
     }))
 
-    // Calculate statistics
+    // Calculate statistics (jobs and projects already filtered by isActive: true)
     const stats = {
-      activeJobs: jobs.filter((j) => j.isActive).length,
+      activeJobs: jobs.length,
       totalJobs: jobs.length,
       totalProjects: projectPosts.length,
       totalApplications: transformedApplications.length,
