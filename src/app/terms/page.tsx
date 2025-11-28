@@ -16,7 +16,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-bold text-gray-900 mb-3">第1条（目的）</h2>
               <p className="text-gray-700 leading-relaxed">
-                本利用規約は、seekjob（以下「当社」）が提供する求人マッチングサービス（以下「本サービス」）の利用条件を定めるものです。
+                本利用規約は、seekjob（以下「当サイト」）が提供する求人マッチングサービス（以下「本サービス」）の利用条件を定めるものです。
                 本サービスを利用する全ての利用者は、本規約に同意したものとみなされます。
               </p>
             </section>
@@ -24,7 +24,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-bold text-gray-900 mb-3">第2条（利用登録）</h2>
               <p className="text-gray-700 leading-relaxed mb-2">
-                本サービスの利用を希望する方は、本規約に同意の上、当社の定める方法によって利用登録を申請し、当社がこれを承認することで利用登録が完了します。
+                本サービスの利用を希望する方は、本規約に同意の上、当サイトの定める方法によって利用登録を申請し、当サイトがこれを承認することで利用登録が完了します。
               </p>
               <ul className="list-disc list-inside text-gray-700 space-y-1 ml-4">
                 <li>登録情報は正確かつ最新の情報を提供してください</li>
@@ -46,14 +46,14 @@ export default function TermsPage() {
                 <li>本サービスのネットワークまたはシステムに過度な負荷をかける行為</li>
                 <li>不正アクセスをし、またはこれを試みる行為</li>
                 <li>他の利用者の情報を収集する行為</li>
-                <li>その他、当社が不適切と判断する行為</li>
+                <li>その他、当サイトが不適切と判断する行為</li>
               </ul>
             </section>
 
             <section>
               <h2 className="text-xl font-bold text-gray-900 mb-3">第4条（個人情報の取扱い）</h2>
               <p className="text-gray-700 leading-relaxed">
-                当社は、利用者の個人情報を適切に管理し、個人情報保護法その他の関連法令を遵守します。
+                当サイトは、利用者の個人情報を適切に管理し、個人情報保護法その他の関連法令を遵守します。
                 個人情報の取扱いの詳細については、プライバシーポリシーをご確認ください。
               </p>
             </section>
@@ -61,15 +61,15 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-bold text-gray-900 mb-3">第5条（サービスの変更・停止）</h2>
               <p className="text-gray-700 leading-relaxed">
-                当社は、利用者への事前通知なく、本サービスの内容を変更、または提供を停止することができます。
-                これによって利用者に生じた損害について、当社は一切の責任を負いません。
+                当サイトは、利用者への事前通知なく、本サービスの内容を変更、または提供を停止することができます。
+                これによって利用者に生じた損害について、当サイトは一切の責任を負いません。
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-bold text-gray-900 mb-3">第6条（料金およびプラン）</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                本サービスの有料プラン（サブスクリプション、スカウト機能など）に関する料金は、当社のウェブサイトに掲載されている価格表に従います。
+                本サービスの有料プラン（サブスクリプション、スカウト機能など）に関する料金は、当サイトのウェブサイトに掲載されている価格表に従います。
               </p>
 
               <div className="bg-gray-50 rounded-lg p-4 mb-4">
@@ -101,7 +101,7 @@ export default function TermsPage() {
               <ul className="list-disc list-inside text-gray-700 space-y-1 ml-4">
                 <li>料金は事前に明示され、利用者の同意の上で課金されます</li>
                 <li className="font-semibold text-red-700">一度購入されたプラン・サービスの料金については、理由の如何を問わず返金はいたしません</li>
-                <li>支払方法は、クレジットカード、PayPay、WeChat Pay、Alipay等、当社が指定する方法とします</li>
+                <li>支払方法は、クレジットカード、PayPay、WeChat Pay、Alipay等、当サイトが指定する方法とします</li>
                 <li>料金の変更がある場合は、事前に利用者に通知します</li>
               </ul>
             </section>
@@ -109,7 +109,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-bold text-gray-900 mb-3">第7条（免責事項）</h2>
               <p className="text-gray-700 leading-relaxed mb-2">
-                当社は、以下の事項について一切の責任を負いません。
+                当サイトは、以下の事項について一切の責任を負いません。
               </p>
               <ul className="list-disc list-inside text-gray-700 space-y-1 ml-4">
                 <li>本サービスに関して利用者が被った損害</li>
@@ -122,7 +122,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-bold text-gray-900 mb-3">第8条（利用契約の解除）</h2>
               <p className="text-gray-700 leading-relaxed">
-                当社は、利用者が本規約に違反した場合、事前通知なく利用契約を解除し、アカウントを削除することができます。
+                当サイトは、利用者が本規約に違反した場合、事前通知なく利用契約を解除し、アカウントを削除することができます。
                 利用者自身による退会については、
                 <Link href="/withdrawal" className="text-primary-500 hover:underline">退会についてページ</Link>
                 をご確認ください。
