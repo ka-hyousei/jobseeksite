@@ -1,6 +1,6 @@
 # セットアップガイド
 
-TechJob求人サイトのセットアップ手順です。
+seekjob求人サイトのセットアップ手順です。
 
 ## 前提条件
 
@@ -21,13 +21,13 @@ npm install
 PostgreSQLにログインして新しいデータベースを作成してください:
 
 ```sql
-CREATE DATABASE techjob;
+CREATE DATABASE seekjob;
 ```
 
 または、コマンドラインから:
 
 ```bash
-createdb techjob
+createdb seekjob
 ```
 
 ### 3. 環境変数の設定
@@ -37,7 +37,7 @@ createdb techjob
 ```env
 # データベース接続URL
 # 形式: postgresql://ユーザー名:パスワード@ホスト:ポート/データベース名
-DATABASE_URL="postgresql://postgres:password@localhost:5432/techjob?schema=public"
+DATABASE_URL="postgresql://postgres:password@localhost:5432/seekjob?schema=public"
 
 # NextAuth設定
 NEXTAUTH_URL="http://localhost:3000"

@@ -1,4 +1,4 @@
-# TechJob - IT技術者求人プラットフォーム
+# seekjob - IT技術者求人プラットフォーム
 
 Next.js 14とPrismaを使用した求人プラットフォームです。
 
