@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import Dialog from '@/components/Dialog'
 
 export default function Header() {
   const { data: session, status } = useSession()
@@ -11,6 +12,7 @@ export default function Header() {
   const [unreadCount, setUnreadCount] = useState(0)
   const [hasActiveSubscription, setHasActiveSubscription] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false)
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -56,10 +58,13 @@ export default function Header() {
     const role = (session?.user as any)?.role
     if (role === 'COMPANY' && !hasActiveSubscription) {
       e.preventDefault()
-      if (confirm('高度人材企業の閲覧には有料プランへの登録が必要です。登録ページに移動しますか?')) {
-        router.push('/dashboard/company/subscription')
-      }
+      setShowSubscriptionDialog(true)
     }
+  }
+
+  const handleSubscriptionDialogClose = () => {
+    setShowSubscriptionDialog(false)
+    router.push('/dashboard/company/subscription')
   }
 
   const handleLogout = async () => {
@@ -280,6 +285,14 @@ export default function Header() {
           </div>
         )}
       </nav>
+
+      <Dialog
+        isOpen={showSubscriptionDialog}
+        onClose={handleSubscriptionDialogClose}
+        title="有料プランが必要です"
+        message="高度人材企業の閲覧には有料プランへの登録が必要です。登録ページに移動しますか?"
+        type="info"
+      />
     </header>
   )
 }

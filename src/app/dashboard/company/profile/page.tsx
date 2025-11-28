@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import Dialog from '@/components/Dialog'
 
 interface CompanyProfile {
   name: string
@@ -26,8 +27,19 @@ export default function CompanyProfilePage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
+
+  const [dialog, setDialog] = useState<{
+    isOpen: boolean
+    type: 'success' | 'error' | 'info'
+    title: string
+    message: string
+  }>({
+    isOpen: false,
+    type: 'info',
+    title: '',
+    message: ''
+  })
 
   const [formData, setFormData] = useState<CompanyProfile>({
     name: '',
@@ -109,8 +121,6 @@ export default function CompanyProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
-    setSuccess(false)
     setSaving(true)
 
     try {
@@ -123,22 +133,37 @@ export default function CompanyProfilePage() {
       })
 
       if (response.ok) {
-        setSuccess(true)
         setInitialFormData(formData) // Reset initial data to current data
         setHasChanges(false) // Disable save button after successful save
-        setTimeout(() => setSuccess(false), 3000)
+        setDialog({
+          isOpen: true,
+          type: 'success',
+          title: '保存成功',
+          message: '企業情報を更新しました'
+        })
       } else {
         const data = await response.json()
+        let errorMessage = '企業情報の更新に失敗しました'
         if (Array.isArray(data.error)) {
-          const errorMessages = data.error.map((err: any) => `${err.path.join('.')}: ${err.message}`).join(', ')
-          setError(errorMessages)
-        } else {
-          setError(data.error || '企業情報の更新に失敗しました')
+          errorMessage = data.error.map((err: any) => `${err.path.join('.')}: ${err.message}`).join(', ')
+        } else if (data.error) {
+          errorMessage = data.error
         }
+        setDialog({
+          isOpen: true,
+          type: 'error',
+          title: '保存失敗',
+          message: errorMessage
+        })
       }
     } catch (error) {
       console.error('Error updating profile:', error)
-      setError('企業情報の更新中にエラーが発生しました')
+      setDialog({
+        isOpen: true,
+        type: 'error',
+        title: 'エラー',
+        message: '企業情報の更新中にエラーが発生しました'
+      })
     } finally {
       setSaving(false)
     }
@@ -171,18 +196,6 @@ export default function CompanyProfilePage() {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">企業情報編集</h1>
             <p className="text-gray-600">企業の情報を更新してください</p>
           </div>
-
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-              {error}
-            </div>
-          )}
-
-          {success && (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
-              企業情報を更新しました
-            </div>
-          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* 基本情報 */}
@@ -398,6 +411,14 @@ export default function CompanyProfilePage() {
         </div>
       </div>
       <Footer />
+
+      <Dialog
+        isOpen={dialog.isOpen}
+        onClose={() => setDialog({ ...dialog, isOpen: false })}
+        title={dialog.title}
+        message={dialog.message}
+        type={dialog.type}
+      />
     </>
   )
 }
