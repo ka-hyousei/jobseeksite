@@ -37,6 +37,7 @@ export default function ScoutPage() {
   const [selectedEngineers, setSelectedEngineers] = useState<Set<string>>(new Set())
   const [scoutMessage, setScoutMessage] = useState('')
   const [sending, setSending] = useState(false)
+  const [company, setCompany] = useState<any>(null)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -47,9 +48,31 @@ export default function ScoutPage() {
         router.push('/')
         return
       }
-      // 初期表示時はエンジニア一覧を取得しない
+      fetchCompanyProfile()
     }
   }, [status, session, router])
+
+  const fetchCompanyProfile = async () => {
+    try {
+      const response = await fetch('/api/company/profile')
+      if (response.ok) {
+        const data = await response.json()
+        setCompany(data)
+      }
+    } catch (error) {
+      console.error('Error fetching company profile:', error)
+    }
+  }
+
+  const hasScoutAccess = () => {
+    if (!company) return false
+    const now = new Date()
+    return (
+      company.hasScoutAccess &&
+      company.scoutAccessExpiry &&
+      new Date(company.scoutAccessExpiry) > now
+    )
+  }
 
   const fetchEngineers = async () => {
     try {
@@ -72,6 +95,12 @@ export default function ScoutPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
+    // Only search if at least one field is filled
+    if (!searchSkill.trim() && !minExperience.trim()) {
+      setEngineers([])
+      setHasSearched(true)
+      return
+    }
     setHasSearched(true)
     fetchEngineers()
   }
@@ -152,8 +181,42 @@ export default function ScoutPage() {
             <p className="text-gray-600">優秀な応募者にスカウトメッセージを送信できます</p>
           </div>
 
+          {/* Scout Access Required Message */}
+          {!hasScoutAccess() && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-8">
+              <div className="flex items-start">
+                <span className="text-2xl mr-3">⚠️</span>
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-yellow-800 mb-2">スカウト機能の利用には追加料金が必要です</h3>
+                  <p className="text-yellow-700 mb-4">
+                    スカウト機能を利用するには、別途お支払いが必要です。
+                  </p>
+                  <div className="bg-white rounded-lg p-4 mb-4">
+                    <h4 className="font-semibold text-gray-900 mb-2">料金プラン:</h4>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center">
+                        <span className="font-medium text-gray-900 mr-2">PayPay:</span>
+                        <span className="text-gray-700">3000円 / 月</span>
+                      </li>
+                      <li className="flex items-center">
+                        <span className="font-medium text-gray-900 mr-2">WeChat Pay / Alipay:</span>
+                        <span className="text-gray-700">150元 / 月</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <button
+                    onClick={() => router.push('/scout/payment')}
+                    className="bg-yellow-600 text-white px-6 py-3 rounded-lg hover:bg-yellow-700 transition font-semibold"
+                  >
+                    スカウト機能を購入する
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Search Form */}
-          <form onSubmit={handleSearch} className="bg-white p-6 rounded-lg shadow-md mb-8">
+          <form onSubmit={handleSearch} className="bg-white p-6 rounded-lg shadow-md mb-8" style={{ opacity: hasScoutAccess() ? 1 : 0.5, pointerEvents: hasScoutAccess() ? 'auto' : 'none' }}>
             <div className="grid md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">

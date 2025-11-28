@@ -86,6 +86,10 @@ model Company {
   // 企業カテゴリー (IT企業かどうか)
   isITCompany     Boolean             @default(true)
 
+  // スカウト機能アクセス権限
+  hasScoutAccess   Boolean            @default(false)
+  scoutAccessExpiry DateTime?
+
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
 

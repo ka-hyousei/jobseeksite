@@ -83,24 +83,67 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 高度人材加点制度対応企業 Section */}
-      <section className="bg-blue-50 py-8 sm:py-12 md:py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-6 sm:mb-8">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-500 mb-3 sm:mb-4">高度人材加点制度対応企業</h2>
-            <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-2">
-              高度人材ポイント制度に対応している企業の求人情報を検索できます
-            </p>
-            <Link
-              href="/companies/advanced-talent"
-              onClick={handleAdvancedTalentClick}
-              className="inline-block bg-primary-500 text-white font-bold px-6 sm:px-8 py-2.5 sm:py-3 rounded-full hover:-translate-y-1 hover:shadow-xl transition transform text-sm sm:text-base"
-            >
-              高度人材加点対応企業を探す
-            </Link>
+      {/* Quick Access Section - Only for logged-in users */}
+      {session && (
+        <section className="bg-blue-50 py-8 sm:py-12 md:py-16">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-6 sm:mb-8">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-500 mb-6">サービスメニュー</h2>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <QuickAccessCard
+                icon="🔍"
+                title="求人検索"
+                description="豊富な求人情報から最適な仕事を見つけよう"
+                href="/jobs"
+                onClick={() => {}}
+              />
+              <QuickAccessCard
+                icon="💼"
+                title="IT案件"
+                description="フリーランス・業務委託のIT案件を探す"
+                href="/projects"
+                onClick={() => {}}
+              />
+              <QuickAccessCard
+                icon="⭐"
+                title="高度人材企業"
+                description="高度人材ポイント制度対応企業を探す"
+                href="/companies/advanced-talent"
+                onClick={handleAdvancedTalentClick}
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* Login Prompt Section - Only for non-logged-in users */}
+      {!session && (
+        <section className="bg-blue-50 py-8 sm:py-12 md:py-16">
+          <div className="max-w-4xl mx-auto px-4 text-center">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-500 mb-4">
+              求人検索・IT案件をご利用になるには
+            </h2>
+            <p className="text-base sm:text-lg text-gray-600 mb-6">
+              会員登録（無料）またはログインが必要です
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+              <Link
+                href="/login"
+                className="inline-block bg-primary-500 text-white font-bold px-6 sm:px-8 py-2.5 sm:py-3 rounded-full hover:-translate-y-1 hover:shadow-xl transition transform text-sm sm:text-base"
+              >
+                ログイン
+              </Link>
+              <Link
+                href="/engineer/register"
+                className="inline-block bg-white text-primary-500 border-2 border-primary-500 font-bold px-6 sm:px-8 py-2.5 sm:py-3 rounded-full hover:-translate-y-1 hover:shadow-xl transition transform text-sm sm:text-base"
+              >
+                無料会員登録
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Features Section */}
       <section className="max-w-7xl mx-auto py-8 sm:py-12 md:py-16 px-4">
@@ -156,6 +199,26 @@ export default function Home() {
 
       <Footer />
     </>
+  )
+}
+
+function QuickAccessCard({ icon, title, description, href, onClick }: { icon: string; title: string; description: string; href: string; onClick: (e: React.MouseEvent) => void }) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg hover:-translate-y-2 hover:shadow-2xl transition-all transform group"
+    >
+      <div className="text-4xl sm:text-5xl mb-3 sm:mb-4 group-hover:scale-110 transition-transform">{icon}</div>
+      <h3 className="text-lg sm:text-xl font-bold text-primary-500 mb-2 group-hover:text-secondary-500 transition-colors">{title}</h3>
+      <p className="text-sm sm:text-base text-gray-600">{description}</p>
+      <div className="mt-4 text-primary-500 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
+        詳しく見る
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </div>
+    </Link>
   )
 }
 

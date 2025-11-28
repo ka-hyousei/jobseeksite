@@ -32,7 +32,7 @@ interface ProjectPost {
 }
 
 export default function ProjectsPage() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const router = useRouter()
   const [projects, setProjects] = useState<ProjectPost[]>([])
   const [search, setSearch] = useState('')
@@ -41,6 +41,12 @@ export default function ProjectsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [loading, setLoading] = useState(true)
   const [company, setCompany] = useState<any>(null)
+
+  // Redirect to login if not authenticated
+  if (status === 'unauthenticated') {
+    router.push('/login?redirect=/projects')
+    return null
+  }
 
   const categories = ['すべて', 'Java', 'C#', 'PHP', 'Ruby', 'Python', 'JavaScript', 'AWS', 'Linux', 'Go', 'Kotlin', 'その他']
 

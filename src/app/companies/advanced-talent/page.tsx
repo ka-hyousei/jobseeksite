@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -30,10 +32,18 @@ interface Company {
 }
 
 export default function AdvancedTalentCompaniesPage() {
+  const { data: session, status } = useSession()
+  const router = useRouter()
   const [companies, setCompanies] = useState<Company[]>([])
   const [search, setSearch] = useState('')
   const [industry, setIndustry] = useState('')
   const [loading, setLoading] = useState(true)
+
+  // Redirect to login if not authenticated
+  if (status === 'unauthenticated') {
+    router.push('/login?redirect=/companies/advanced-talent')
+    return null
+  }
 
   useEffect(() => {
     fetchCompanies()

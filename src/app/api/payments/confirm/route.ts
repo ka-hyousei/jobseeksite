@@ -47,7 +47,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Payment already completed' }, { status: 400 })
     }
 
-    // Calculate subscription expiry (30 days from now)
+    // Calculate expiry (30 days from now)
     const expiryDate = new Date()
     expiryDate.setMonth(expiryDate.getMonth() + 1)
 
@@ -59,20 +59,40 @@ export async function POST(req: Request) {
       },
     })
 
-    // Activate subscription
-    await prisma.company.update({
-      where: { id: user.company.id },
-      data: {
+    // Check if this is a scout payment (amount is 3000 JPY or 150 CNY)
+    const isScoutPayment = (payment.amount === 3000 && payment.currency === 'JPY') ||
+                           (payment.amount === 150 && payment.currency === 'CNY')
+
+    if (isScoutPayment) {
+      // Activate scout access
+      await prisma.company.update({
+        where: { id: user.company.id },
+        data: {
+          hasScoutAccess: true,
+          scoutAccessExpiry: expiryDate,
+        },
+      })
+
+      return NextResponse.json({
+        message: 'Payment confirmed and scout access activated',
+        scoutAccessExpiry: expiryDate,
+      })
+    } else {
+      // Activate subscription
+      await prisma.company.update({
+        where: { id: user.company.id },
+        data: {
+          subscriptionPlan: payment.plan,
+          subscriptionExpiry: expiryDate,
+        },
+      })
+
+      return NextResponse.json({
+        message: 'Payment confirmed and subscription activated',
         subscriptionPlan: payment.plan,
         subscriptionExpiry: expiryDate,
-      },
-    })
-
-    return NextResponse.json({
-      message: 'Payment confirmed and subscription activated',
-      subscriptionPlan: payment.plan,
-      subscriptionExpiry: expiryDate,
-    })
+      })
+    }
   } catch (error) {
     console.error('Payment confirmation error:', error)
     return NextResponse.json(

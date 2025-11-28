@@ -3,11 +3,24 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Header from '@/components/Header'
+import Dialog from '@/components/Dialog'
 
 export default function NewProjectPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const [dialog, setDialog] = useState<{
+    isOpen: boolean
+    type: 'success' | 'error' | 'info'
+    title: string
+    message: string
+  }>({
+    isOpen: false,
+    type: 'info',
+    title: '',
+    message: ''
+  })
 
   const [formData, setFormData] = useState({
     title: '',
@@ -69,21 +82,44 @@ export default function NewProjectPage() {
       console.log('Response data:', data)
 
       if (response.ok) {
-        alert('IT案件を投稿しました')
-        router.push('/dashboard/company')
+        setDialog({
+          isOpen: true,
+          type: 'success',
+          title: 'IT案件投稿成功',
+          message: 'IT案件が正常に投稿されました。'
+        })
+        setTimeout(() => {
+          router.push('/dashboard/company')
+        }, 2000)
       } else {
         if (data.requiresPayment) {
           // Redirect to subscription page with error message
-          if (confirm(data.error + '\n\n有料プラン登録ページに移動しますか？')) {
+          setDialog({
+            isOpen: true,
+            type: 'error',
+            title: '有料プランが必要です',
+            message: data.error + '\n\n有料プラン登録ページに移動しますか？'
+          })
+          setTimeout(() => {
             router.push('/dashboard/company/subscription')
-          }
+          }, 3000)
         } else {
-          setError(data.error || '投稿に失敗しました')
+          setDialog({
+            isOpen: true,
+            type: 'error',
+            title: 'IT案件投稿失敗',
+            message: data.error || '投稿に失敗しました'
+          })
         }
       }
     } catch (err) {
       console.error('Error:', err)
-      setError('投稿中にエラーが発生しました')
+      setDialog({
+        isOpen: true,
+        type: 'error',
+        title: 'エラー',
+        message: '投稿中にエラーが発生しました'
+      })
     } finally {
       setLoading(false)
     }
@@ -411,6 +447,14 @@ export default function NewProjectPage() {
           </form>
         </div>
       </div>
+
+      <Dialog
+        isOpen={dialog.isOpen}
+        onClose={() => setDialog({ ...dialog, isOpen: false })}
+        title={dialog.title}
+        message={dialog.message}
+        type={dialog.type}
+      />
     </>
   )
 }

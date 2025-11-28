@@ -38,8 +38,14 @@ export default function JobSearchPage() {
   const [jobType, setJobType] = useState('')
   const [remoteOk, setRemoteOk] = useState(false)
   const [company, setCompany] = useState<any>(null)
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const router = useRouter()
+
+  // Redirect to login if not authenticated
+  if (status === 'unauthenticated') {
+    router.push('/login?redirect=/jobs')
+    return null
+  }
 
   const fetchJobs = async () => {
     setLoading(true)
@@ -265,11 +271,11 @@ function JobCard({ job, session, hasActiveSubscription, router }: { job: Job; se
                 </span>
               )}
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 pb-2">
               {job.skills.slice(0, 5).map((jobSkill) => (
                 <span
                   key={jobSkill.skill.id}
-                  className="px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs"
+                  className="px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs whitespace-nowrap flex-shrink-0"
                 >
                   {jobSkill.skill.name}
                 </span>

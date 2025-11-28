@@ -65,8 +65,8 @@ export async function GET(req: Request) {
 
       return NextResponse.json(applicationsWithUnread)
     } else if (user.company) {
-      // 企業の場合
-      applications = await prisma.application.findMany({
+      // 企業の場合 - 求人応募とIT案件応募の両方を取得
+      const jobApplications = await prisma.application.findMany({
         where: {
           job: {
             companyId: user.company.id,
@@ -86,15 +86,45 @@ export async function GET(req: Request) {
               firstName: true,
               lastName: true,
               displayName: true,
+              currentPosition: true,
+              yearsOfExperience: true,
             },
           },
         },
         orderBy: { createdAt: 'desc' },
       })
 
-      // 各応募の未読メッセージ数を取得
-      const applicationsWithUnread = await Promise.all(
-        applications.map(async (app) => {
+      // IT案件応募も取得
+      const projectApplications = await prisma.projectApplication.findMany({
+        where: {
+          project: {
+            companyId: user.company.id,
+          },
+        },
+        include: {
+          project: {
+            select: {
+              id: true,
+              title: true,
+            },
+          },
+          engineer: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              displayName: true,
+              currentPosition: true,
+              yearsOfExperience: true,
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      })
+
+      // 求人応募の未読メッセージ数を取得
+      const jobAppsWithUnread = await Promise.all(
+        jobApplications.map(async (app) => {
           const unreadCount = await prisma.message.count({
             where: {
               applicationId: app.id,
@@ -102,11 +132,34 @@ export async function GET(req: Request) {
               isRead: false,
             },
           })
-          return { ...app, unreadCount }
+          return {
+            ...app,
+            unreadCount,
+            applicationType: 'job' as const
+          }
         })
       )
 
-      return NextResponse.json(applicationsWithUnread)
+      // IT案件応募を同じフォーマットに変換
+      const projectAppsFormatted = projectApplications.map(app => ({
+        id: app.id,
+        status: app.status,
+        createdAt: app.createdAt,
+        unreadCount: 0, // IT案件応募にはメッセージ機能がないため0
+        job: {
+          id: app.project.id,
+          title: app.project.title + ' (IT案件)',
+          companyId: user.company!.id,
+        },
+        engineer: app.engineer,
+        applicationType: 'project' as const
+      }))
+
+      // 両方を結合してソート
+      const allApplications = [...jobAppsWithUnread, ...projectAppsFormatted]
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+
+      return NextResponse.json(allApplications)
     }
 
     return NextResponse.json([])
