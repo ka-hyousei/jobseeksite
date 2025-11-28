@@ -179,7 +179,7 @@ export default function Home() {
       {stats && stats.shouldShowStats && (
         <section className="bg-gray-50 py-8 sm:py-12 md:py-16">
           <div className="max-w-7xl mx-auto px-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8 md:mb-12">TechJobの実績</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8 md:mb-12">seekjobの実績</h2>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 text-center">
               <StatItem number={`${stats.companyCount.toLocaleString()}+`} label="登録企業数" />
               <StatItem number={`${stats.engineerCount.toLocaleString()}+`} label="登録応募者数" />

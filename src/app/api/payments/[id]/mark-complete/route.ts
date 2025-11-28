@@ -94,7 +94,7 @@ export async function POST(
 
     await sendEmail({
       to: adminEmail,
-      subject: '【TechJob】支払い確認リクエスト',
+      subject: '【seekjob】支払い確認リクエスト',
       text: `
 支払い確認リクエストが届きました。
 
@@ -123,7 +123,7 @@ ${rejectUrl}
 ※ 承認すると、会社のサブスクリプションが有効化されます。
 
 ----------------------------------
-TechJob 管理システム
+seekjob 管理システム
       `,
       html: `
 <!DOCTYPE html>
@@ -199,7 +199,7 @@ TechJob 管理システム
       </p>
     </div>
     <div class="footer">
-      <p>TechJob 管理システム<br>
+      <p>seekjob 管理システム<br>
       このメールは自動送信されています。</p>
     </div>
   </div>

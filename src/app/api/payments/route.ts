@@ -97,7 +97,7 @@ export async function POST(req: Request) {
               paymentId: payment.id,
               amount,
               currency,
-              description: `TechJob ${validatedData.plan} プラン - 月額会員費`,
+              description: `seekjob ${validatedData.plan} プラン - 月額会員費`,
               callbackUrl,
             })
             qrCodeData = wechatResult.qrCodeData
@@ -114,7 +114,7 @@ export async function POST(req: Request) {
               paymentId: payment.id,
               amount,
               currency,
-              description: `TechJob ${validatedData.plan} プラン - 月額会員費`,
+              description: `seekjob ${validatedData.plan} プラン - 月額会員費`,
               callbackUrl,
             })
             qrCodeData = alipayResult.qrCodeData
@@ -132,7 +132,7 @@ export async function POST(req: Request) {
               paymentId: payment.id,
               amount,
               currency,
-              description: `TechJob ${validatedData.plan} プラン - 月額会員費`,
+              description: `seekjob ${validatedData.plan} プラン - 月額会員費`,
               callbackUrl,
             })
             qrCodeData = paypayResult.qrCodeData

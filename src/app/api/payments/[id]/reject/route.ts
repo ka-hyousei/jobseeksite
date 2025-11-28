@@ -142,7 +142,7 @@ function generateHTML(title: string, message: string, type: 'success' | 'error' 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title} - TechJob</title>
+  <title>${title} - seekjob</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -218,11 +218,11 @@ function generateHTML(title: string, message: string, type: 'success' | 'error' 
         ${message}
       </div>
       <p style="text-align: center; margin-top: 30px;">
-        <a href="${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}">TechJobホームページに戻る</a>
+        <a href="${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}">seekjobホームページに戻る</a>
       </p>
     </div>
     <div class="footer">
-      <p>TechJob 管理システム</p>
+      <p>seekjob 管理システム</p>
       <p style="margin-top: 5px;">このページは自動生成されています。</p>
     </div>
   </div>

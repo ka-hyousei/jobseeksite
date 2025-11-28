@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     if (adminEmail) {
       const emailContent = {
         to: adminEmail,
-        subject: `[TechJob] 新しいお問い合わせ: ${validatedData.subject}`,
+        subject: `[seekjob] 新しいお問い合わせ: ${validatedData.subject}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #333;">新しいお問い合わせ</h2>
@@ -83,12 +83,12 @@ ${validatedData.message}
     // ユーザーに自動返信メールを送信
     const autoReplyEmail = {
       to: validatedData.email,
-      subject: `【TechJob】お問い合わせを受け付けました`,
+      subject: `【seekjob】お問い合わせを受け付けました`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #333;">お問い合わせありがとうございます</h2>
           <p>${validatedData.name}様</p>
-          <p>この度はTechJobにお問い合わせいただき、誠にありがとうございます。</p>
+          <p>この度はseekjobにお問い合わせいただき、誠にありがとうございます。</p>
           <p>以下の内容でお問い合わせを受け付けました。</p>
 
           <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
@@ -104,7 +104,7 @@ ${validatedData.message}
           <p style="color: #666; font-size: 12px;">
             このメールは自動送信されています。<br>
             お問い合わせID: ${contactInquiry.id}<br>
-            TechJob運営チーム
+            seekjob運営チーム
           </p>
         </div>
       `,
@@ -113,7 +113,7 @@ ${validatedData.message}
 
 ${validatedData.name}様
 
-この度はTechJobにお問い合わせいただき、誠にありがとうございます。
+この度はseekjobにお問い合わせいただき、誠にありがとうございます。
 以下の内容でお問い合わせを受け付けました。
 
 件名: ${validatedData.subject}
@@ -127,7 +127,7 @@ ${validatedData.message}
 ---
 このメールは自動送信されています。
 お問い合わせID: ${contactInquiry.id}
-TechJob運営チーム
+seekjob運営チーム
       `,
     }
 
